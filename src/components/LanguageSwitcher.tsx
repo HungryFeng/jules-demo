@@ -1,27 +1,25 @@
 import { useTranslation } from 'react-i18next';
-import { Button } from '@/components/ui/button';
 
 const LanguageSwitcher = () => {
   const { i18n } = useTranslation();
 
-  const changeLanguage = (lng: string) => {
-    i18n.changeLanguage(lng);
+  const changeLanguage = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    i18n.changeLanguage(event.target.value);
   };
 
   return (
-    <div className="flex gap-2 justify-center my-4">
-      <Button 
-        variant={i18n.language === 'en' ? 'default' : 'outline'} 
-        onClick={() => changeLanguage('en')}
+    // Updated className for positioning
+    <div className="absolute top-4 right-4 z-10"> 
+      <select 
+        value={i18n.language} 
+        onChange={changeLanguage}
+        // Added some basic styling for visibility and consistency.
+        // Consider using classes from ui/select if a Shadcn select is preferred later.
+        className="p-2 border rounded bg-background text-foreground shadow hover:bg-muted"
       >
-        English
-      </Button>
-      <Button 
-        variant={i18n.language === 'zh' ? 'default' : 'outline'} 
-        onClick={() => changeLanguage('zh')}
-      >
-        中文
-      </Button>
+        <option value="en">English</option>
+        <option value="zh">中文</option>
+      </select>
     </div>
   );
 };
