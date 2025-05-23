@@ -12,7 +12,7 @@ i18n
     ns: ['translation'], // Default namespace
     defaultNS: 'translation',
     backend: {
-      loadPath: '/locales/{{lng}}/{{ns}}.json', // Path to translation files
+      loadPath: '/locales/{{lng}}.json', // Path to translation files
     },
     interpolation: {
       escapeValue: false, // React already safes from xss
