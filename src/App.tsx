@@ -1,21 +1,106 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Checkbox } from '@/components/ui/checkbox';
+import { TodoItem } from './types';
 import './App.css';
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [todos, setTodos] = useState<TodoItem[]>([]);
+  const [newTodoText, setNewTodoText] = useState<string>('');
+
+  // Load todos from localStorage on initial render
+  useEffect(() => {
+    const storedTodos = localStorage.getItem('todos');
+    if (storedTodos) {
+      try {
+        const parsedTodos = JSON.parse(storedTodos);
+        if (Array.isArray(parsedTodos)) { // Basic validation
+          setTodos(parsedTodos);
+        }
+      } catch (error) {
+        console.error("Failed to parse todos from localStorage", error);
+        setTodos([]); // Default to empty array on error
+      }
+    }
+  }, []); // Empty dependency array means this effect runs once on mount
+
+  // Save todos to localStorage whenever they change
+  useEffect(() => {
+    // Avoid saving the initial empty array before they've had a chance to load
+    // or if todos were cleared (e.g. by parsing error).
+    // The initial load effect will set the state, and then this effect will run.
+    // If 'todos' is an empty array after loading (or due to error), it's correct to save it as such.
+    localStorage.setItem('todos', JSON.stringify(todos));
+  }, [todos]); // This effect runs whenever the 'todos' state changes
+
+  const handleAddTodo = () => {
+    const trimmedText = newTodoText.trim();
+    if (trimmedText) {
+      setTodos([
+        ...todos,
+        {
+          id: Date.now().toString(),
+          text: trimmedText,
+          completed: false,
+        },
+      ]);
+      setNewTodoText('');
+    }
+  };
+
+  const handleToggleComplete = (id: string) => {
+    setTodos(
+      todos.map((todo) =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      )
+    );
+  };
+
+  const handleDeleteTodo = (id: string) => {
+    setTodos(todos.filter((todo) => todo.id !== id));
+  };
 
   return (
-    <>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <Button onClick={() => setCount((count) => count + 1)}>count is {count}</Button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+    <div className="container mx-auto max-w-2xl p-4 sm:p-6 lg:p-8">
+      <h1 className="text-3xl font-bold text-center my-8">Todo List</h1>
+      <div className="flex gap-2 mb-6">
+        <Input
+          value={newTodoText}
+          onChange={(e) => setNewTodoText(e.target.value)}
+          placeholder="What needs to be done?"
+          className="flex-grow"
+        />
+        <Button onClick={handleAddTodo}>Add Todo</Button>
       </div>
-      <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
-    </>
+      <div className="space-y-2">
+        {todos.length === 0 ? (
+          <p className="text-muted-foreground text-center py-4">No todos yet!</p>
+        ) : (
+          todos.map((todo) => (
+            <div
+              key={todo.id}
+              className="flex items-center gap-3 p-3 rounded-md border bg-card"
+            >
+              <Checkbox
+                id={`todo-${todo.id}`}
+                checked={todo.completed}
+                onCheckedChange={() => handleToggleComplete(todo.id)}
+              />
+              <label
+                htmlFor={`todo-${todo.id}`}
+                className={`flex-grow ${todo.completed ? 'line-through text-muted-foreground' : ''}`}
+              >
+                {todo.text}
+              </label>
+              <Button variant="destructive" size="sm" onClick={() => handleDeleteTodo(todo.id)}>
+                Delete
+              </Button>
+            </div>
+          ))
+        )}
+      </div>
+    </div>
   );
 }
 
