@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next'; // Import useTranslation
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { TodoItem } from './types';
+import LanguageSwitcher from './components/LanguageSwitcher'; // Import LanguageSwitcher
 import './App.css';
 
 function App() {
+  const { t } = useTranslation(); // Initialize useTranslation
   const [todos, setTodos] = useState<TodoItem[]>([]);
   const [newTodoText, setNewTodoText] = useState<string>('');
 
@@ -63,19 +66,24 @@ function App() {
 
   return (
     <div className="container mx-auto max-w-2xl p-4 sm:p-6 lg:p-8">
-      <h1 className="text-3xl font-bold text-center my-8">Todo List</h1>
+      {/* Translate heading */}
+      <h1 className="text-3xl font-bold text-center my-8">{t('todoList')}</h1>
+      <LanguageSwitcher /> {/* Add LanguageSwitcher here */}
       <div className="flex gap-2 mb-6">
         <Input
           value={newTodoText}
           onChange={(e) => setNewTodoText(e.target.value)}
-          placeholder="What needs to be done?"
+          // Translate placeholder
+          placeholder={t('whatNeedsToBeDone')}
           className="flex-grow"
         />
-        <Button onClick={handleAddTodo}>Add Todo</Button>
+        {/* Translate button text */}
+        <Button onClick={handleAddTodo}>{t('addTodo')}</Button>
       </div>
       <div className="space-y-2">
         {todos.length === 0 ? (
-          <p className="text-muted-foreground text-center py-4">No todos yet!</p>
+          // Translate "No todos yet!" message
+          <p className="text-muted-foreground text-center py-4">{t('noTodosYet')}</p>
         ) : (
           todos.map((todo) => (
             <div
@@ -93,8 +101,9 @@ function App() {
               >
                 {todo.text}
               </label>
+              {/* Translate button text */}
               <Button variant="destructive" size="sm" onClick={() => handleDeleteTodo(todo.id)}>
-                Delete
+                {t('delete')}
               </Button>
             </div>
           ))
