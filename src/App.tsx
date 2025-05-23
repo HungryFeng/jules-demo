@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
+import { ThemeToggle } from '@/components/theme-toggle'; // Import ThemeToggle
 import { TodoItem } from './types';
 import './App.css';
 
@@ -63,7 +64,10 @@ function App() {
 
   return (
     <div className="container mx-auto max-w-2xl p-4 sm:p-6 lg:p-8">
-      <h1 className="text-3xl font-bold text-center my-8">Todo List</h1>
+      <div className="flex justify-between items-center my-8">
+        <h1 className="text-3xl font-bold">Todo List</h1> {/* text-center removed */}
+        <ThemeToggle />
+      </div>
       <div className="flex gap-2 mb-6">
         <Input
           value={newTodoText}
