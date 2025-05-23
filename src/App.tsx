@@ -67,10 +67,14 @@ function App() {
 
   return (
     <div className="container mx-auto max-w-2xl p-4 sm:p-6 lg:p-8">
+      {/* This is the new wrapper div */}
+      <div className="absolute top-4 right-4 flex gap-2 z-10">
+        <LanguageSwitcher />
+        <ThemeToggle />
+      </div>
+
       {/* Translate heading */}
       <h1 className="text-3xl font-bold text-center my-8">{t('todoList')}</h1>
-      <LanguageSwitcher /> {/* Add LanguageSwitcher here */}
-      <ThemeToggle />
       <div className="flex gap-2 mb-6">
         <Input
           value={newTodoText}
