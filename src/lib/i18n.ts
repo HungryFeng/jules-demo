@@ -6,7 +6,7 @@ i18n
   .use(HttpApi) // Load translations using http (e.g., from public/locales)
   .use(initReactI18next) // Passes i18n down to react-i18next
   .init({
-    supportedLngs: ['en', 'zh'], // Supported languages
+    supportedLngs: ['en', 'zh', 'ja'], // Supported languages
     fallbackLng: 'en', // Fallback language if a translation is missing
     debug: true, // Enable debug output in console
     ns: ['translation'], // Default namespace
